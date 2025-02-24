@@ -17,7 +17,7 @@ namespace BookingApp.Api.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> BookItem([FromBody] BookingDetails bookingDetails, [FromQuery] int inventoryId, [FromQuery] int memberId, CancellationToken cancellationToken)
+        public async Task<IActionResult> BookItem([FromQuery] int inventoryId, [FromQuery] int memberId, CancellationToken cancellationToken)
         {
             var member = await _repository.GetAsync<Member>(x => x.Id == memberId, true, cancellationToken).ConfigureAwait(false);
 
