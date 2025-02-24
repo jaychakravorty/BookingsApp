@@ -44,7 +44,19 @@ namespace BookingApp.Infrastructure.Data
 
         public  async Task<IList<T>> GetAllAsNoTrackAsync<T>(CancellationToken cancellationToken) where T : BaseModel
         {
-            return await this._bookingContext.Set<T>().AsNoTracking().ToListAsync().ConfigureAwait(false);
+            IQueryable<T> query = this._bookingContext.Set<T>();
+
+            // Dynamically include navigation properties if they exist
+            var navigationProperties = typeof(T).GetProperties()
+                .Where(p => p.PropertyType.IsClass && p.PropertyType != typeof(string));
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                query = query.Include(navigationProperty.Name);
+            }
+
+
+            return await query.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<T> GetAsync<T>(Expression<Func<T, bool>> predicate, bool asTracking, CancellationToken cancellationToken) where T : BaseModel

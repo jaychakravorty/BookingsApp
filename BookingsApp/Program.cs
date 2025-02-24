@@ -14,7 +14,8 @@ internal class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
         builder.Services.AddDbContext<BookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
